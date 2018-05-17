@@ -172,7 +172,7 @@ slowdown:
         mov     [bx+si+6],ax       ; ...to counter actual value
 
 keepspeed:      
-				call		thinkmove
+        call    thinkmove
 
         test    byte [bx+si+3],80H ; check low bound
         jz      chkhi
