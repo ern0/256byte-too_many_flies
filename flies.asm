@@ -167,7 +167,7 @@ doit:   dec     byte [bx+si+6]     ; countdown
         jnz     slowdown
         neg     ax
 slowdown:       
-				add			word [bx+si+4],ax  ; slowdown
+        add     word [bx+si+4],ax  ; slowdown
         mov     ax,[bx+si+8]       ; copy counter inital value...
         mov     [bx+si+6],ax       ; ...to counter actual value
 
@@ -183,11 +183,11 @@ chkhi:
         jc      rr
 
 thinkmoveneg:   
-				neg 		word [bx+si+4]     ; turn
+        neg     word [bx+si+4]     ; turn
 
 thinkmove:      
-				mov			ax,[bx+si+4]       ; actual speed
-        add			[bx+si+2],ax       ; move
+        mov     ax,[bx+si+4]       ; actual speed
+        add     [bx+si+2],ax       ; move
 
 rr:
 ;----------------------------------------------
