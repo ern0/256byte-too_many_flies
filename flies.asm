@@ -1,6 +1,7 @@
 ;-------------------------------------;
 ; Too Many Flies (Shit In Da Corner)  ;
 ; 256-byte intro by ERN0, 1998.08.15  ;
+; (Reformatted for FASM, 2018.05.17)  ;
 ;-------------------------------------;
 ; ******* ***     *** *******  *****  ;
 ; ***     ***     *** ***     ***     ;
@@ -12,28 +13,21 @@
 ;      http://www.nexus.hu/ern0/      ;
 ; ------------------------------------;
 
-        comment *
 
-I have no time to code a whole demo, suck with music player, protected
-mode and so on, so if I wanna release something, this is the only way.
+; I have no time to code a whole demo, suck with music player, protected
+; mode and so on, so if I wanna release something, this is the only way.
 
-                *
-
-        .286            ; Lamer 80286 code
 
-        smart           ; TASM
-        jumps
+; .286            ; Lamer 80286 code
 
-FLIES   equ     222     ; No of flies
-SEEDPLUZ        equ     19      ; Random generator
-BAZE    equ     1000H   ; BX base
-SLEN    equ     20H     ; Structure length
-COLPLUZ equ     21      ; Next Fly's brightest color offset
-DECR    equ     3       ; Darker color offset
-SPEEDQ  equ     24447   ; Speed dividor
+FLIES     equ     222     ; No of flies
+SEEDPLUZ  equ     19      ; Random generator
+BAZE      equ     1000H   ; BX base
+SLEN      equ     20H     ; Structure length
+COLPLUZ   equ     21      ; Next Fly's brightest color offset
+DECR      equ     3       ; Darker color offset
+SPEEDQ    equ     24447   ; Speed divisor
 
-w       equ     word ptr
-b       equ     byte ptr
 
 ; The structure
 ;
@@ -48,14 +42,14 @@ b       equ     byte ptr
 ;       16      Y counter
 ;       18      Y counter start value
 
-macska  segment para public 'code'
-        assume  cs:macska
-        assume  ds:macska
-        assume  es:nothing
+;macska  segment para public 'code'
+;        assume  cs:macska
+;        assume  ds:macska
+;        assume  es:nothing
 
         org     100H
-
-s       label   near
+;----------------------------------------------
+s:
 
         mov     al,13H
         int     10H
@@ -66,7 +60,7 @@ s       label   near
         mov     ah,9
         int     21H
 
-seed    label   word
+seed:
 
         mov     ch,3    ; max no of flies
         mov     bx,BAZE
@@ -76,8 +70,8 @@ xinit:
         and     al,03FH
         mov     [bx],ax ; color
         ;
-        mov     w [bx+2],bp     ; X position
-        mov     w [bx+12],bp    ; Y position
+        mov     word [bx+2],bp     ; X position
+        mov     word [bx+12],bp    ; Y position
         ;
         xor     ax,ax
         mov     [bx+4],ax
@@ -86,9 +80,8 @@ xinit:
         add     bx,SLEN
         add     dl,COLPLUZ
         loop    xinit
-
-Cycle   label   near
-
+;----------------------------------------------
+Cycle:
         mov     cx,FLIES
         mov     bx,BAZE
 
@@ -108,7 +101,7 @@ cyc:    xor     ax,ax   ; Clear
 
         add     bx,SLEN
         loop    cyc
-
+;----------------------------------------------
 ; Wait.VB, keypress.check, quit
 
         mov     dx,3daH ; Ripped code
@@ -125,8 +118,8 @@ kafff:  lahf
 q:      mov     ax,3    ; Cleanup
         int     10H
         int     16H
-
-PutFly  label   near    ; Put BX Fly with
+;----------------------------------------------
+PutFly:                 ; Put BX Fly with
                         ; AL color, AH color decrement
         push    ax
 
@@ -152,61 +145,64 @@ PutFly  label   near    ; Put BX Fly with
         pop     ds
 
         ret
-
-Think   label   near    ; [bx+si] coordinate operation
+;----------------------------------------------
+Think:                   ; [bx+si] coordinate operation
 
-        test    b [bx+si+4],-1  ; check zero speed
+        test    byte [bx+si+4],-1  ; check zero speed
         jnz     doit
 
         call    Random
         cwd
         mov     di,SPEEDQ       ; 65536/maxspeed
         idiv    di
-        mov     w [bx+si+4],ax  ; inital speed
+        mov     word [bx+si+4],ax  ; inital speed
         call    Random
         and     ax,1fH
         or      al,1
-nonz:   mov     w [bx+si+6],ax  ; counter value
-        mov     w [bx+si+8],ax  ; counter value
+nonz:   mov     word [bx+si+6],ax  ; counter value
+        mov     word [bx+si+8],ax  ; counter value
 
-doit:   dec     b [bx+si+6]     ; countdown
+doit:   dec     byte [bx+si+6]     ; countdown
         jnz     keepspeed
         mov     al,1
-        test    b [bx+si+5],80H ; check sign
+        test    byte [bx+si+5],80H ; check sign
         jnz     slowdown
         neg     ax
-slowdown:       add     w [bx+si+4],ax  ; slowdown
-        mov     ax,[bx+si+8]    ; copy counter inital value...
-        mov     [bx+si+6],ax    ; ...to counter actual value
+slowdown:       
+				add			word [bx+si+4],ax  ; slowdown
+        mov     ax,[bx+si+8]       ; copy counter inital value...
+        mov     [bx+si+6],ax       ; ...to counter actual value
 
-keepspeed:      call    thinkmove
+keepspeed:      
+				call		thinkmove
 
-        test    b [bx+si+3],80H ; check low bound
+        test    byte [bx+si+3],80H ; check low bound
         jz      chkhi
 
         call    thinkmoveneg
-
-chkhi:  cmp     [bx+si+2],bp    ; check high bound
+chkhi:  
+				cmp     [bx+si+2],bp       ; check high bound
         jc      rr
 
-thinkmoveneg:   neg     w [bx+si+4]     ; turn
+thinkmoveneg:   
+				neg 		word [bx+si+4]     ; turn
 
-thinkmove:      mov     ax,[bx+si+4]    ; actual speed
-        add     [bx+si+2],ax    ; move
+thinkmove:      
+				mov			ax,[bx+si+4]       ; actual speed
+        add			[bx+si+2],ax       ; move
 
-rr      label   near
-
-Random  label   near
-
+rr:
+;----------------------------------------------
+Random:
         mov     ax,[seed]
         add     ax,SEEDPLUZ
         mov     [seed],ax
 
         ret
-
-text    db      10      ; The text
+;----------------------------------------------
+text    db      10                 ; The text
         db      244,215,139,226
         db      '$'
 
-macska  ends
-        end     s
+;macska  ends
+;        end     s
