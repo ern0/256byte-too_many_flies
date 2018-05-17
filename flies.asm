@@ -179,7 +179,7 @@ keepspeed:
 
         call    thinkmoveneg
 chkhi:  
-				cmp     [bx+si+2],bp       ; check high bound
+        cmp     [bx+si+2],bp       ; check high bound
         jc      rr
 
 thinkmoveneg:   
