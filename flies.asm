@@ -9,11 +9,10 @@
 ; ***     ***     *** ***         *** ;
 ; ***     ******* *** ******* ******  ;
 ;-------------------------------------;
-;      mailto:zalkae@rs3.szif.hu      ;
-;      http://www.nexus.hu/ern0/      ;
+;      mailto:ern0@linkbroker.hu      ;
+;        http://linkbroker.hu/        ;
 ; ------------------------------------;
-
-
+;
 ; I have no time to code a whole demo, suck with music player, protected
 ; mode and so on, so if I wanna release something, this is the only way.
 
@@ -105,7 +104,6 @@ cyc:    xor     ax,ax   ; Clear
 ; Wait.VB, keypress.check, quit
 
         mov     dx,3daH ; Ripped code
-db      0b4H
 kafff:  lahf
         in      al,dx
         and     ax,0408H
