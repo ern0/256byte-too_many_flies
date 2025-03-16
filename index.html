@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Too Many Flies</title>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        #dos {
+            width: 100%;
+            height: 100%;
+            cursor:none;
+        }
+    </style>
+
+    <!-- js-dos style sheet -->
+    <link rel="stylesheet" href="js-dos.css">
+
+    <!-- js-dos -->
+    <script src="js-dos.js"></script>
+</head>
+<body>
+
+    <div id="dos" style="width: 100%; height: 100%"></div>
+
+    <script>
+        Dos(document.getElementById("dos"), {
+            url: "web/flies.zip?DoNotCache=" + ((new Date()).getTime()),
+			autoStart: true,
+        });
+    </script>
+</body>
+</html>
